@@ -85,6 +85,10 @@ uv run python inspect_graphs.py
 
 <img width="1895" height="880" alt="image" src="https://github.com/user-attachments/assets/9133b6a4-7d09-4b0b-b21c-1acfcffde8ec" />
 
+
+<img width="1895" height="958" alt="image" src="https://github.com/user-attachments/assets/ebd621e0-16b3-4336-8370-31dfbfb730c9" />
+
+
 ---
 
 ## 📂 Project Structure
