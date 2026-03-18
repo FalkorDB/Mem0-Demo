@@ -15,16 +15,16 @@ from demo import (
 )
 
 
+@patch("demo.time.sleep", return_value=None)
 class TestScene1Onboarding:
-    def test_add_called_for_all_messages(self, mock_memory):
-        """m.add is called once per message per developer (5×3 = 15)."""
+    def test_add_called_for_all_messages(self, _sleep, mock_memory):
+        """m.add is called once per message per developer."""
         scene_1_onboarding(mock_memory)
 
         total_messages = sum(len(p["messages"]) for p in DEVELOPERS.values())
         assert mock_memory.add.call_count == total_messages
-        assert total_messages == 15
 
-    def test_returns_all_user_ids(self, mock_memory):
+    def test_returns_all_user_ids(self, _sleep, mock_memory):
         """Returns a list containing all 3 developer ids."""
         user_ids = scene_1_onboarding(mock_memory)
 
@@ -43,7 +43,8 @@ class TestScene2Retrieval:
 
 
 class TestScene3MemoryUpdate:
-    def test_search_and_add_calls(self, mock_memory):
+    @patch("demo.time.sleep", return_value=None)
+    def test_search_and_add_calls(self, _sleep, mock_memory):
         """Scene 3 searches twice and adds the migration message."""
         scene_3_memory_update(mock_memory)
 

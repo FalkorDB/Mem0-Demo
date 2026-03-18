@@ -205,6 +205,21 @@ def cmd_graph(m) -> None:
 # ── Main loop ────────────────────────────────────────────────────────
 
 
+def cmd_user(arg: str, user_id: str, history: list[dict]) -> str:
+    """Handle the /user command. Returns the (possibly updated) user_id."""
+    if not arg:
+        console.print(f"[yellow]Current user: {user_id}[/yellow]")
+        console.print("[yellow]Usage: /user <user_id>[/yellow]")
+        return user_id
+
+    history.clear()
+    console.print(
+        f"[green]✓ Switched to user [bold]{arg}[/bold]. "
+        "Chat history cleared; memories persist.[/green]"
+    )
+    return arg
+
+
 def show_welcome(user_id: str) -> None:
     """Display the welcome panel."""
     console.print(
@@ -264,16 +279,7 @@ def main() -> None:
             elif cmd == "/graph":
                 cmd_graph(m)
             elif cmd == "/user":
-                if not arg:
-                    console.print(f"[yellow]Current user: {user_id}[/yellow]")
-                    console.print("[yellow]Usage: /user <user_id>[/yellow]")
-                else:
-                    user_id = arg
-                    history.clear()
-                    console.print(
-                        f"[green]✓ Switched to user [bold]{user_id}[/bold]. "
-                        "Chat history cleared; memories persist.[/green]"
-                    )
+                user_id = cmd_user(arg, user_id, history)
             elif cmd == "/clear":
                 history.clear()
                 console.print(

@@ -8,6 +8,7 @@ from chat import (
     cmd_graph,
     cmd_memories,
     cmd_search,
+    cmd_user,
     recall_memories,
 )
 
@@ -105,17 +106,20 @@ class TestCmdGraph:
 
 class TestUserSwitch:
     def test_user_switch_updates_state(self):
-        """Simulates the /user command logic from main loop."""
-        user_id = "developer"
+        """cmd_user returns new user_id and clears history."""
         history = [{"role": "user", "content": "hello"}]
+        new_id = cmd_user("alice", "developer", history)
 
-        # Simulate /user command handler logic
-        new_user = "alice"
-        user_id = new_user
-        history.clear()
-
-        assert user_id == "alice"
+        assert new_id == "alice"
         assert history == []
+
+    def test_user_switch_no_arg_keeps_user(self):
+        """cmd_user with no arg keeps the current user_id unchanged."""
+        history = [{"role": "user", "content": "hello"}]
+        result = cmd_user("", "developer", history)
+
+        assert result == "developer"
+        assert len(history) == 1  # history not cleared
 
 
 class TestHelpCommand:

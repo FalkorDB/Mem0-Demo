@@ -85,3 +85,4 @@ class TestInitMem0:
             result = init_mem0()
 
         assert result is fake_memory
+        mock_register.assert_called_once()
