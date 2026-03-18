@@ -83,6 +83,8 @@ uv run python chat.py
 uv run python inspect_graphs.py
 ```
 
+<img width="1895" height="880" alt="image" src="https://github.com/user-attachments/assets/9133b6a4-7d09-4b0b-b21c-1acfcffde8ec" />
+
 ---
 
 ## 📂 Project Structure
