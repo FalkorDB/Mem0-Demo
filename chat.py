@@ -16,7 +16,6 @@ import openai
 from rich.markdown import Markdown
 from rich.panel import Panel
 from rich.table import Table
-from rich.text import Text
 
 from config import console, init_mem0
 
@@ -101,7 +100,9 @@ def cmd_memories(m, user_id: str) -> None:
     """List all stored memories for the current user."""
     try:
         all_mems = m.get_all(user_id=user_id)
-        results = all_mems.get("results", []) if isinstance(all_mems, dict) else all_mems
+        results = (
+            all_mems.get("results", []) if isinstance(all_mems, dict) else all_mems
+        )
     except Exception as e:
         console.print(f"[red]Error fetching memories: {e}[/red]")
         return
@@ -204,6 +205,21 @@ def cmd_graph(m) -> None:
 # ── Main loop ────────────────────────────────────────────────────────
 
 
+def cmd_user(arg: str, user_id: str, history: list[dict]) -> str:
+    """Handle the /user command. Returns the (possibly updated) user_id."""
+    if not arg:
+        console.print(f"[yellow]Current user: {user_id}[/yellow]")
+        console.print("[yellow]Usage: /user <user_id>[/yellow]")
+        return user_id
+
+    history.clear()
+    console.print(
+        f"[green]✓ Switched to user [bold]{arg}[/bold]. "
+        "Chat history cleared; memories persist.[/green]"
+    )
+    return arg
+
+
 def show_welcome(user_id: str) -> None:
     """Display the welcome panel."""
     console.print(
@@ -233,7 +249,9 @@ def main() -> None:
 
     while True:
         try:
-            user_input = console.input(f"\n[bold green][{user_id}][/bold green] > ").strip()
+            user_input = console.input(
+                f"\n[bold green][{user_id}][/bold green] > "
+            ).strip()
         except (KeyboardInterrupt, EOFError):
             console.print("\n[dim]Goodbye! 👋[/dim]")
             sys.exit(0)
@@ -261,21 +279,16 @@ def main() -> None:
             elif cmd == "/graph":
                 cmd_graph(m)
             elif cmd == "/user":
-                if not arg:
-                    console.print(f"[yellow]Current user: {user_id}[/yellow]")
-                    console.print("[yellow]Usage: /user <user_id>[/yellow]")
-                else:
-                    user_id = arg
-                    history.clear()
-                    console.print(
-                        f"[green]✓ Switched to user [bold]{user_id}[/bold]. "
-                        "Chat history cleared; memories persist.[/green]"
-                    )
+                user_id = cmd_user(arg, user_id, history)
             elif cmd == "/clear":
                 history.clear()
-                console.print("[green]✓ Chat history cleared. Memories persist.[/green]")
+                console.print(
+                    "[green]✓ Chat history cleared. Memories persist.[/green]"
+                )
             else:
-                console.print(f"[yellow]Unknown command: {cmd}. Type /help for options.[/yellow]")
+                console.print(
+                    f"[yellow]Unknown command: {cmd}. Type /help for options.[/yellow]"
+                )
             continue
 
         # ── Auto-recall: search memories ──────────────────────────
@@ -283,9 +296,7 @@ def main() -> None:
             memories = recall_memories(m, user_input, user_id)
 
         if memories:
-            summary = ", ".join(
-                entry.get("memory", "…")[:60] for entry in memories[:3]
-            )
+            summary = ", ".join(entry.get("memory", "…")[:60] for entry in memories[:3])
             suffix = f" (+{len(memories) - 3} more)" if len(memories) > 3 else ""
             console.print(
                 f"[dim cyan]📎 Recalled {len(memories)} "
