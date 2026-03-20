@@ -1,4 +1,4 @@
-# 🧠 Mem0 + OpenClaw + FalkorDB Demo
+# 🧠 Mem0 + FalkorDB Demo
 
 Persistent **graph-structured memory** for AI coding assistants — powered by [Mem0](https://github.com/mem0ai/mem0) and [FalkorDB](https://falkordb.com).
 
